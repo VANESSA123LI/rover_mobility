@@ -1,0 +1,32 @@
+#include <Wire.h>
+#include <Adafruit_MotorShield.h>
+#include <Servo.h>
+// Create the motor shield object
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+// Create servo object
+Servo myServo;
+// Create DC motor object
+Adafruit_DCMotor *dcMotor = AFMS.getMotor(1); // Connect DC motor to M1 port
+// Create stepper motor object
+// Adafruit_StepperMotor *stepper = AFMS.getStepper(516, 2); // Connect stepper to M3 and M4 port, 516 steps per revolution
+void setup() {
+Serial.begin(9600); // Initialize serial communication
+// Initialize Motor Shield
+AFMS.begin(); // Start the shield
+// Attach servo to port 9
+myServo.attach(9); // Servo port is labeled as 9 ("servo 2" on the shield) or 10 ("servo 1" on the shield)
+// Set DC motor speed
+dcMotor->setSpeed(100); // Set DC motor speed to 150 (range is 0-255)
+Serial.println("Motors are ready!");
+}
+void loop() {
+
+Serial.println("Moving DC motor forward...");
+dcMotor->run(FORWARD); // Run the DC motor forward
+delay(2); // Run for 2 seconds (2000 ms)
+Serial.println("Moving DC motor backward...");
+dcMotor->run(BACKWARD); // Run the DC motor backward
+delay(2); // Run for 2 seconds
+dcMotor->run(RELEASE); // Stop the DC motor
+0); // Wait for a second (1000 ms)
+}
