@@ -1,0 +1,20 @@
+#include <Wire.h>
+#include <Adafruit_MotorShield.h>
+
+// Create the motor shield object
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+
+
+Adafruit_StepperMotor *stepper = AFMS.getStepper(516, 2); // Create stepper motor object
+
+void setup() {
+Serial.begin(9600); 
+AFMS.begin();
+stepper->setSpeed(500);
+}
+
+void loop() {
+stepper->step(516, FORWARD, DOUBLE); // Move stepper backward 516 steps
+}
+
+
