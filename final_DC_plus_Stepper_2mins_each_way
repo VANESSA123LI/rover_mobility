@@ -1,0 +1,52 @@
+#include <Wire.h>
+#include <Adafruit_MotorShield.h>
+#include <Servo.h>
+
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+Adafruit_DCMotor *dcMotorL = AFMS.getMotor(1);
+Adafruit_DCMotor *dcMotorR = AFMS.getMotor(2); 
+Adafruit_StepperMotor *stepper = AFMS.getStepper(516, 2);
+
+void setup() {
+Serial.begin(9600); // Initialize serial communication
+// Initialize Motor Shield
+AFMS.begin(); // Start the shield
+dcMotorL->setSpeed(255); // Set DC motor speed to 150 (range is 0-255)
+dcMotorR ->setSpeed(255); 
+stepper->setSpeed(500);
+}
+bool hasRun = false;
+
+void loop() {
+if (!hasRun){
+dcMotorL->run(FORWARD); // Run the DC motor forward
+dcMotorR->run(FORWARD); // Run the DC motor forward
+delay(5000); // Run for 5 seconds (2000 ms)
+dcMotorL->run(BACKWARD); // Run the DC motor backward
+dcMotorR->run(BACKWARD); // Run the DC motor backward
+delay(5000); // Run for 5 seconds
+dcMotorL->run(FORWARD); // Run the DC motor forward
+dcMotorR->run(FORWARD); // Run the DC motor forward
+delay(6000); 
+dcMotorL ->run(RELEASE); // Stop the DC motor // Wait for a second (1000 ms)
+dcMotorR->run(RELEASE); 
+//one and done 
+hasRun = true;
+}
+else {
+    // Run stepper motor for 2 minutes
+    unsigned long startTime = millis();
+    while (millis() - startTime < 120000) { // 120000 ms = 2 minutes
+      stepper->step(516, FORWARD, DOUBLE); // Step forward 516 steps
+    }
+
+    delay(60000); // Pause for 1 minute for it to take pH
+
+    startTime = millis();
+    while (millis() - startTime < 120000) { // 120000 ms = 2 minutes
+      stepper->step(516, BACKWARD, DOUBLE); // Step backward 516 steps
+    }
+
+    delay(120000); // Pause for 2 minutes
+  }
+}
